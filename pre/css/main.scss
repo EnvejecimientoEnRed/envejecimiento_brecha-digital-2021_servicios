@@ -216,7 +216,7 @@ body, button {
                 font-size: 0.9em;
                 line-height: 10px;    
 
-                padding-left: 18px;
+                padding-left: 16px;
                 margin-right: 18px;
 
                 &:last-child {
@@ -229,8 +229,9 @@ body, button {
                     top: 50%;
                     left: 0;
                     transform: translateY(-50%);
-                    width: 16px;
-                    height: 2px;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
                     background-color: #ccc; /* Este es el atributo a modificar */
                 }
 
@@ -250,26 +251,31 @@ body, button {
 
         //Visualización
         &__viz {
-            height: 340px;
-            margin-top: 12px;
+            height: 690px;
 
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
 
-            & div {
-                width: 50%;
-
-                & p {
-                    font-size: 0.9rem;
-                }
-
-                & .chart {
-                    margin-top: 6px;
-                    width: 100%;
-                    height: 316px;
-                }
+            //Gráficos
+            &--title {
+                font-size: 0.9em;
+                font-weight: 700;
+                margin: 16px 0px 8px 0px;
             }
 
+            &--viz {
+                width: 100%;
+            }
+
+            //Alturas específicas para cada gráfico
+            #chart_comunicacion { height: 140px; }
+            #chart_informacion { height: 80px; }
+            #chart_entretenimiento { height: 170px; }
+            #chart_salud { height: 140px; }
+            #chart_aprendizaje { height: 110px; }
+            #chart_otras { height: 170px; }
+
+            //Texto en gráficos
             & .tick text {
                 font-family: 'Titillium Web';
                 font-style: normal;

@@ -11,14 +11,20 @@ import '../css/main.scss';
 let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/envejecimiento_brecha-digital-2021_evolucion/main/data/evolucion_edad_tic.csv';
 let tooltip = d3.select('#tooltip');
 
-let innerData = [], nestedData = [], chartBlock = d3.select('#chart'), chart, x_c, x_cAxis, y_c, y_cAxis, line, paths;
+let innerData = [], nestedData = [], x_c, x_cAxis, y_c, y_cAxis;
+let chartBlockComunicacion = d3.select('#chart_comunicacion'), chartComunicacion;
+let chartBlockInformacion = d3.select('#chart_informacion'), chartInformacion;
+let chartBlockEntretenimiento = d3.select('#chart_entretenimiento'), chartEntretenimiento;
+let chartBlockSalud = d3.select('#chart_salud'), chartSalud;
+let chartBlockAprendizaje = d3.select('#chart_aprendizaje'), chartAprendizaje;
+let chartBlockOtras = d3.select('#chart_otras'), chartOtras;
 let currentSelected = 'ninguno';
-let margin = {top: 15, right: 10, bottom: 17.5, left: 40}, width, height;
+let margin = {top: 15, right: 10, bottom: 17.5, left: 80}, width, height;
 let colors = ['#76B8B8', '#8F480D', '#d8d8d8'];
 
-initChart();
+initData();
 
-function initChart() {
+function initData() {
     let csv = d3.dsvFormat(';');
 
     d3.text(dataSource, function(err, data) {
@@ -36,158 +42,161 @@ function initChart() {
                 '65_74': +d['65_74'].replace(',','.')
             }
         });
-        innerData = innerData.reverse();
-        let keys = data.columns.slice(2);
 
-        nestedData = keys.map(function(item) {
-            let aux = [];
-            innerData.map(function(d) {
-                aux.push({'anio':d.anio, 'valor': d[item]});
-            });
-            return {'key': item, 'data': aux};            
-        });
+        console.log(innerData);
 
-        //Desarrollo de la visualización
-        width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
-        height = parseInt(chartBlock.style('height')) - margin.top - margin.bottom;
+        // innerData = innerData.reverse();
+        // let keys = data.columns.slice(2);
 
-        chart = chartBlock
-            .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-                .attr("transform",
-                    "translate(" + margin.left + "," + margin.top + ")");
+        // nestedData = keys.map(function(item) {
+        //     let aux = [];
+        //     innerData.map(function(d) {
+        //         aux.push({'anio':d.anio, 'valor': d[item]});
+        //     });
+        //     return {'key': item, 'data': aux};            
+        // });
 
-        x_c = d3.scaleBand()
-            .domain(nestedData[0].data.map(function(d) { return d.anio; }))
-            .range([0, width]);
+        // //Desarrollo de la visualización
+        // width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
+        // height = parseInt(chartBlock.style('height')) - margin.top - margin.bottom;
 
-        x_cAxis = function(g){
-            g.call(d3.axisBottom(x_c).tickValues(x_c.domain().filter(function(d,i) { return !(i%3); })))
-            g.call(function(g){g.selectAll('.tick line').remove();})
-            g.call(function(g){g.select('.domain').remove()});
-        }
+        // chart = chartBlock
+        //     .append("svg")
+        //         .attr("width", width + margin.left + margin.right)
+        //         .attr("height", height + margin.top + margin.bottom)
+        //     .append("g")
+        //         .attr("transform",
+        //             "translate(" + margin.left + "," + margin.top + ")");
 
-        chart.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .attr('class','x_c-axis')
-            .call(x_cAxis);
+        // x_c = d3.scaleBand()
+        //     .domain(nestedData[0].data.map(function(d) { return d.anio; }))
+        //     .range([0, width]);
 
-        // Add Y axis
-        y_c = d3.scaleLinear()
-            .domain([0, 100])
-            .range([height, 10]);
+        // x_cAxis = function(g){
+        //     g.call(d3.axisBottom(x_c).tickValues(x_c.domain().filter(function(d,i) { return !(i%3); })))
+        //     g.call(function(g){g.selectAll('.tick line').remove();})
+        //     g.call(function(g){g.select('.domain').remove()});
+        // }
 
-        y_cAxis = function(svg){
-            svg.call(d3.axisLeft(y_c).ticks(5).tickFormat(function(d) { return d + '%'; }))
-            svg.call(function(g){
-                g.selectAll('.tick line')
-                    .attr('class', function(d,i) {
-                        if (d == 0) {
-                            return 'line-special';
-                        }
-                    })
-                    .attr("x1", '0')
-                    .attr("x2", '' + width + '')
-            })
-            svg.call(function(g){g.select('.domain').remove()})
-        }      
+        // chart.append("g")
+        //     .attr("transform", "translate(0," + height + ")")
+        //     .attr('class','x_c-axis')
+        //     .call(x_cAxis);
 
-        chart.append("g")
-            .attr('class','y_c-axis')
-            .call(y_cAxis);
+        // // Add Y axis
+        // y_c = d3.scaleLinear()
+        //     .domain([0, 100])
+        //     .range([height, 10]);
 
-        //Línea
-        line = d3.line()
-            .x(function(d) { return x_c(d.anio) + x_c.bandwidth() / 2; })
-            .y(function(d) { return y_c(+d.valor); });
+        // y_cAxis = function(svg){
+        //     svg.call(d3.axisLeft(y_c).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        //     svg.call(function(g){
+        //         g.selectAll('.tick line')
+        //             .attr('class', function(d,i) {
+        //                 if (d == 0) {
+        //                     return 'line-special';
+        //                 }
+        //             })
+        //             .attr("x1", '0')
+        //             .attr("x2", '' + width + '')
+        //     })
+        //     svg.call(function(g){g.select('.domain').remove()})
+        // }      
 
-        paths = chart.selectAll(".line")
-            .data(nestedData)
-            .enter()
-            .append("path")
-            .attr('class', 'line')
-            .attr("fill", "none")
-            .attr("stroke", function(d){
-                if (d.key == '65_74') {
-                    return colors[0];
-                } else {
-                    return colors[2];
-                }
-            })
-            .attr("stroke-width", 2)
-            .attr('d', function(d) {
-                return line(d.data);
-            });
+        // chart.append("g")
+        //     .attr('class','y_c-axis')
+        //     .call(y_cAxis);
 
-        paths.attr("stroke-dasharray", 768 + " " + 768)
-            .attr("stroke-dashoffset", 768)
-            .transition()
-            .ease(d3.easeLinear)
-            .attr("stroke-dashoffset", 0)
-            .duration(3000);
+        // //Línea
+        // line = d3.line()
+        //     .x(function(d) { return x_c(d.anio) + x_c.bandwidth() / 2; })
+        //     .y(function(d) { return y_c(+d.valor); });
 
-        //Circles > Primero y último
-        for(let i = 0; i < nestedData.length; i++) {
-            chart.selectAll('init')
-                .data(nestedData[i].data)
-                .enter()
-                .append('circle')
-                .attr('class', function(d) {
-                    return `circle circle-${nestedData[i].key}`;
-                })
-                .attr("r", '3.5')
-                .attr("cx", function(d) { return x_c(+d.anio) + x_c.bandwidth() / 2})
-                .attr("cy", function(d) { return y_c(+d.valor); })
-                .style("fill", colors[0])
-                .style('opacity', '0');
-        }
+        // paths = chart.selectAll(".line")
+        //     .data(nestedData)
+        //     .enter()
+        //     .append("path")
+        //     .attr('class', 'line')
+        //     .attr("fill", "none")
+        //     .attr("stroke", function(d){
+        //         if (d.key == '65_74') {
+        //             return colors[0];
+        //         } else {
+        //             return colors[2];
+        //         }
+        //     })
+        //     .attr("stroke-width", 2)
+        //     .attr('d', function(d) {
+        //         return line(d.data);
+        //     });
 
-        //Labels > Primero y último
-        for(let i = 0; i < nestedData.length; i++) {
-            chart.selectAll('init')
-                .data(nestedData[i].data)
-                .enter()
-                .append('text')
-                .attr('class', function(d) {
-                    return `label label-${nestedData[i].key}`;
-                })
-                .text(function(d) {
-                    return d.valor.toString().replace('.',',') + '%';
-                })
-                .attr("x", function(d) { return x_c(+d.anio) + x_c.bandwidth() / 2})
-                .attr("y", function(d) { return y_c(+d.valor) - 10; })
-                .attr('font-size', '12px')
-                .attr('text-anchor', 'middle')
-                .style('opacity', '0');
-        }
+        // paths.attr("stroke-dasharray", 768 + " " + 768)
+        //     .attr("stroke-dashoffset", 768)
+        //     .transition()
+        //     .ease(d3.easeLinear)
+        //     .attr("stroke-dashoffset", 0)
+        //     .duration(3000);
+
+        // //Circles > Primero y último
+        // for(let i = 0; i < nestedData.length; i++) {
+        //     chart.selectAll('init')
+        //         .data(nestedData[i].data)
+        //         .enter()
+        //         .append('circle')
+        //         .attr('class', function(d) {
+        //             return `circle circle-${nestedData[i].key}`;
+        //         })
+        //         .attr("r", '3.5')
+        //         .attr("cx", function(d) { return x_c(+d.anio) + x_c.bandwidth() / 2})
+        //         .attr("cy", function(d) { return y_c(+d.valor); })
+        //         .style("fill", colors[0])
+        //         .style('opacity', '0');
+        // }
+
+        // //Labels > Primero y último
+        // for(let i = 0; i < nestedData.length; i++) {
+        //     chart.selectAll('init')
+        //         .data(nestedData[i].data)
+        //         .enter()
+        //         .append('text')
+        //         .attr('class', function(d) {
+        //             return `label label-${nestedData[i].key}`;
+        //         })
+        //         .text(function(d) {
+        //             return d.valor.toString().replace('.',',') + '%';
+        //         })
+        //         .attr("x", function(d) { return x_c(+d.anio) + x_c.bandwidth() / 2})
+        //         .attr("y", function(d) { return y_c(+d.valor) - 10; })
+        //         .attr('font-size', '12px')
+        //         .attr('text-anchor', 'middle')
+        //         .style('opacity', '0');
+        // }
         
-        //Mostramos círculos
-        chart.selectAll('.circle-65_74')
-            .transition()
-            .delay(3000)
-            .duration(500)
-            .style('opacity', function(d,i) {
-                if(i == 0 || i == 14) {
-                    return '1';
-                } else {
-                    return '0';
-                }
-            }); 
+        // //Mostramos círculos
+        // chart.selectAll('.circle-65_74')
+        //     .transition()
+        //     .delay(3000)
+        //     .duration(500)
+        //     .style('opacity', function(d,i) {
+        //         if(i == 0 || i == 14) {
+        //             return '1';
+        //         } else {
+        //             return '0';
+        //         }
+        //     }); 
 
-        //Mostramos labels
-        chart.selectAll('.label-65_74')
-            .transition()
-            .delay(3000)
-            .duration(500)
-            .style('opacity', function(d,i) {
-                if(i == 0 || i == 14) {
-                    return '1';
-                } else {
-                    return '0';
-                }
-            });  
+        // //Mostramos labels
+        // chart.selectAll('.label-65_74')
+        //     .transition()
+        //     .delay(3000)
+        //     .duration(500)
+        //     .style('opacity', function(d,i) {
+        //         if(i == 0 || i == 14) {
+        //             return '1';
+        //         } else {
+        //             return '0';
+        //         }
+        //     });  
     }); 
 }
 
@@ -376,7 +385,7 @@ function setChartCanvasImage() {
     // Create a link
     var aDownloadLink = document.createElement('a');
     // Add the name of the file to the link
-    aDownloadLink.download = 'envejecimiento_brecha-digital-2021_evolucion.png';
+    aDownloadLink.download = 'envejecimiento_brecha-digital-2021_servicios.png';
     // Attach the data to the link
     aDownloadLink.href = image;
     // Get the code to click the download link
