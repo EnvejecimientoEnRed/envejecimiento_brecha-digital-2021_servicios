@@ -12,6 +12,7 @@ let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/envejeci
 let tooltip = d3.select('#tooltip');
 
 let innerData = [], nestedData = [];
+let chartViz = d3.select('.chart__viz');
 let chartBlockComunicacion = d3.select('#chart_comunicacion'), chartComunicacion, x1, xAxis1, y1, yAxis1, width1, height1;
 let chartBlockInformacion = d3.select('#chart_informacion'), chartInformacion, x2, xAxis2, y2, yAxis2, width2, height2;
 let chartBlockEntretenimiento = d3.select('#chart_entretenimiento'), chartEntretenimiento, x3, xAxis3, y3, yAxis3, width3, height3;
@@ -56,6 +57,16 @@ function initData() {
 
 function updateChart(tipo) {
     console.log(tipo);
+
+    //Círculos
+    chartViz.selectAll(`.circle-${currentSelected}`).style('fill', colors[2]);
+    chartViz.selectAll(`.circle-${tipo}`).style('fill', colors[1]);
+
+    //Labels
+    chartViz.selectAll(`.label-${currentSelected}`).style('opacity', '0');
+    chartViz.selectAll(`.label-${tipo}`).style('opacity', '1');
+
+    currentSelected = tipo;
 }
 
 function animateChart() {
@@ -212,7 +223,7 @@ function setComunicacion() {
             .attr("cx", function(d) { return x1(+d.valor)})
             .attr("cy", function(d) { return y1(d.servicio_abrev) + y1.bandwidth() / 2; })
             .style("fill", function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return colors[0];
                 } else {
                     return colors[2];
@@ -235,7 +246,7 @@ function setComunicacion() {
             })
             .attr("x", function(d) { return x1(+d.valor)})
             .attr("y", function(d) { 
-                if(d.tipo == 'Edad: De 65 a 74 años') {
+                if(d.tipo == '65_74') {
                     return y1(d.servicio_abrev) + (y1.bandwidth() / 2) - 12.5;
                 } else {
                     return y1(d.servicio_abrev) + (y1.bandwidth() / 2) + 17.5;
@@ -244,7 +255,7 @@ function setComunicacion() {
             .attr('font-size', '12px')
             .attr('text-anchor', 'middle')
             .style('opacity', function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return '1';
                 } else {
                     return '0';
@@ -325,7 +336,7 @@ function setInformacion() {
             .attr("cx", function(d) { return x2(+d.valor)})
             .attr("cy", function(d) { return y2(d.servicio_abrev) + y2.bandwidth() / 2; })
             .style("fill", function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return colors[0];
                 } else {
                     return colors[2];
@@ -348,7 +359,7 @@ function setInformacion() {
             })
             .attr("x", function(d) { return x2(+d.valor)})
             .attr("y", function(d) { 
-                if(d.tipo == 'Edad: De 65 a 74 años') {
+                if(d.tipo == '65_74') {
                     return y2(d.servicio_abrev) + (y2.bandwidth() / 2) - 12.5;
                 } else {
                     return y2(d.servicio_abrev) + (y2.bandwidth() / 2) + 17.5;
@@ -357,7 +368,7 @@ function setInformacion() {
             .attr('font-size', '12px')
             .attr('text-anchor', 'middle')
             .style('opacity', function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return '1';
                 } else {
                     return '0';
@@ -438,7 +449,7 @@ function setEntretenimiento() {
             .attr("cx", function(d) { return x3(+d.valor)})
             .attr("cy", function(d) { return y3(d.servicio_abrev) + y3.bandwidth() / 2; })
             .style("fill", function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return colors[0];
                 } else {
                     return colors[2];
@@ -461,7 +472,7 @@ function setEntretenimiento() {
             })
             .attr("x", function(d) { return x3(+d.valor)})
             .attr("y", function(d) { 
-                if(d.tipo == 'Edad: De 65 a 74 años') {
+                if(d.tipo == '65_74') {
                     return y3(d.servicio_abrev) + (y3.bandwidth() / 2) - 12.5;
                 } else {
                     return y3(d.servicio_abrev) + (y3.bandwidth() / 2) + 17.5;
@@ -470,7 +481,7 @@ function setEntretenimiento() {
             .attr('font-size', '12px')
             .attr('text-anchor', 'middle')
             .style('opacity', function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return '1';
                 } else {
                     return '0';
@@ -551,7 +562,7 @@ function setSalud() {
             .attr("cx", function(d) { return x4(+d.valor)})
             .attr("cy", function(d) { return y4(d.servicio_abrev) + y4.bandwidth() / 2; })
             .style("fill", function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return colors[0];
                 } else {
                     return colors[2];
@@ -574,7 +585,7 @@ function setSalud() {
             })
             .attr("x", function(d) { return x4(+d.valor)})
             .attr("y", function(d) { 
-                if(d.tipo == 'Edad: De 65 a 74 años') {
+                if(d.tipo == '65_74') {
                     return y4(d.servicio_abrev) + (y4.bandwidth() / 2) - 12.5;
                 } else {
                     return y4(d.servicio_abrev) + (y4.bandwidth() / 2) + 17.5;
@@ -583,7 +594,7 @@ function setSalud() {
             .attr('font-size', '12px')
             .attr('text-anchor', 'middle')
             .style('opacity', function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return '1';
                 } else {
                     return '0';
@@ -664,7 +675,7 @@ function setAprendizaje() {
             .attr("cx", function(d) { return x5(+d.valor)})
             .attr("cy", function(d) { return y5(d.servicio_abrev) + y5.bandwidth() / 2; })
             .style("fill", function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return colors[0];
                 } else {
                     return colors[2];
@@ -687,7 +698,7 @@ function setAprendizaje() {
             })
             .attr("x", function(d) { return x5(+d.valor)})
             .attr("y", function(d) { 
-                if(d.tipo == 'Edad: De 65 a 74 años') {
+                if(d.tipo == '65_74') {
                     return y5(d.servicio_abrev) + (y5.bandwidth() / 2) - 12.5;
                 } else {
                     return y5(d.servicio_abrev) + (y5.bandwidth() / 2) + 17.5;
@@ -696,7 +707,7 @@ function setAprendizaje() {
             .attr('font-size', '12px')
             .attr('text-anchor', 'middle')
             .style('opacity', function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return '1';
                 } else {
                     return '0';
@@ -777,7 +788,7 @@ function setOtras() {
             .attr("cx", function(d) { return x6(+d.valor)})
             .attr("cy", function(d) { return y6(d.servicio_abrev) + y5.bandwidth() / 2; })
             .style("fill", function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return colors[0];
                 } else {
                     return colors[2];
@@ -800,7 +811,7 @@ function setOtras() {
             })
             .attr("x", function(d) { return x6(+d.valor)})
             .attr("y", function(d) { 
-                if(d.tipo == 'Edad: De 65 a 74 años') {
+                if(d.tipo == '65_74') {
                     return y6(d.servicio_abrev) + (y6.bandwidth() / 2) - 12.5;
                 } else {
                     return y6(d.servicio_abrev) + (y6.bandwidth() / 2) + 17.5;
@@ -809,7 +820,7 @@ function setOtras() {
             .attr('font-size', '12px')
             .attr('text-anchor', 'middle')
             .style('opacity', function(d) {
-                if(d.tipo == 'Edad: De 65 a 74 años'){
+                if(d.tipo == '65_74'){
                     return '1';
                 } else {
                     return '0';
