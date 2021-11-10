@@ -8,7 +8,7 @@ import * as d3 from 'd3';
 import '../css/main.scss';
 
 ///// VISUALIZACIÓN DEL GRÁFICO //////
-let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/envejecimiento_brecha-digital-2021_evolucion/main/data/evolucion_edad_tic.csv';
+let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/envejecimiento_brecha-digital-2021_servicios/main/data/servicios_tic_2020.csv';
 let tooltip = d3.select('#tooltip');
 
 let innerData = [], nestedData = [], x_c, x_cAxis, y_c, y_cAxis;
@@ -31,21 +31,23 @@ function initData() {
         if(err) throw err;
         data = csv.parse(data);
 
+        console.log(data);
+
         innerData = data.map(function(d) {
             return {
-                anio: d.anio,
-                '16_24': +d['16_24'].replace(',','.'),
-                '25_34': +d['25_34'].replace(',','.'),
-                '35_44': +d['35_44'].replace(',','.'),
-                '45_54': +d['45_54'].replace(',','.'),
-                '55_64': +d['55_64'].replace(',','.'),
-                '65_74': +d['65_74'].replace(',','.')
+                servicio: d.servicio,
+                servicio_padre: d.servicio_padre,
+                servicio_abrev: d.servicio_abrev_viz,
+                tipo: d.tipo,
+                valor: +d.valor.replace(',','.')
             }
         });
 
-        console.log(innerData);
+        nestedData = d3.nest()
+        .key(function(d) { return d.servicio_padre; })
+        .key(function(d) { return d.servicio_abrev; })
+        .entries(innerData);
 
-        // innerData = innerData.reverse();
         // let keys = data.columns.slice(2);
 
         // nestedData = keys.map(function(item) {
