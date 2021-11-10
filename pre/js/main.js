@@ -56,11 +56,58 @@ function initData() {
 }
 
 function updateChart(tipo) {
-    console.log(tipo);
-
-    //Círculos
+    //Círculos previos
     chartViz.selectAll(`.circle-${currentSelected}`).style('fill', colors[2]);
-    chartViz.selectAll(`.circle-${tipo}`).style('fill', colors[1]);
+
+    //Círculos actuales
+    ////Comunicación
+    let circlesCom = chartComunicacion.selectAll(`.circle-${tipo}`).nodes();
+    chartComunicacion.selectAll(`.circle-${tipo}`).remove();
+
+    for(let i = 0; i < circlesCom.length; i++) {
+        circlesCom[i].style.fill = colors[1];
+        chartComunicacion.node().appendChild(circlesCom[i]);
+    }
+    ////Información
+    let circlesInf = chartInformacion.selectAll(`.circle-${tipo}`).nodes();
+    chartInformacion.selectAll(`.circle-${tipo}`).remove();
+
+    for(let i = 0; i < circlesInf.length; i++) {
+        circlesInf[i].style.fill = colors[1];
+        chartInformacion.node().appendChild(circlesInf[i]);
+    }
+    ////Entretenimiento
+    let circlesEnt = chartEntretenimiento.selectAll(`.circle-${tipo}`).nodes();
+    chartEntretenimiento.selectAll(`.circle-${tipo}`).remove();
+
+    for(let i = 0; i < circlesEnt.length; i++) {
+        circlesEnt[i].style.fill = colors[1];
+        chartEntretenimiento.node().appendChild(circlesEnt[i]);
+    }
+    ////Salud
+    let circlesSalud = chartSalud.selectAll(`.circle-${tipo}`).nodes();
+    chartSalud.selectAll(`.circle-${tipo}`).remove();
+
+    for(let i = 0; i < circlesSalud.length; i++) {
+        circlesSalud[i].style.fill = colors[1];
+        chartSalud.node().appendChild(circlesSalud[i]);
+    }
+    ////Aprendizaje
+    let circlesAprendizaje = chartAprendizaje.selectAll(`.circle-${tipo}`).nodes();
+    chartAprendizaje.selectAll(`.circle-${tipo}`).remove();
+
+    for(let i = 0; i < circlesAprendizaje.length; i++) {
+        circlesAprendizaje[i].style.fill = colors[1];
+        chartAprendizaje.node().appendChild(circlesAprendizaje[i]);
+    }
+    ////Otras
+    let circlesOtras = chartOtras.selectAll(`.circle-${tipo}`).nodes();
+    chartOtras.selectAll(`.circle-${tipo}`).remove();
+
+    for(let i = 0; i < circlesOtras.length; i++) {
+        circlesOtras[i].style.fill = colors[1];
+        chartOtras.node().appendChild(circlesOtras[i]);
+    }
 
     //Labels
     chartViz.selectAll(`.label-${currentSelected}`).style('opacity', '0');
@@ -220,7 +267,7 @@ function setComunicacion() {
                 return `circle circle-${d.tipo}`;
             })
             .attr("r", '6')
-            .attr("cx", function(d) { return x1(+d.valor)})
+            .attr("cx", function(d) { return x1(-100)})
             .attr("cy", function(d) { return y1(d.servicio_abrev) + y1.bandwidth() / 2; })
             .style("fill", function(d) {
                 if(d.tipo == '65_74'){
@@ -229,7 +276,10 @@ function setComunicacion() {
                     return colors[2];
                 }
             })
-            .style('opacity', '1');
+            .style('opacity', '1')
+            .transition()
+            .duration(2500)
+            .attr("cx", function(d) { return x1(+d.valor)})
     }
 
     //Labels para los círculos
@@ -244,10 +294,10 @@ function setComunicacion() {
             .text(function(d) {
                 return d.valor.toString().replace('.',',') + '%';
             })
-            .attr("x", function(d) { return x1(+d.valor)})
+            .attr("x", function(d) { return x1(-100)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
-                    return y1(d.servicio_abrev) + (y1.bandwidth() / 2) - 12.5;
+                    return y1(d.servicio_abrev) + (y1.bandwidth() / 2) - 10.5;
                 } else {
                     return y1(d.servicio_abrev) + (y1.bandwidth() / 2) + 17.5;
                 } 
@@ -260,7 +310,10 @@ function setComunicacion() {
                 } else {
                     return '0';
                 }
-            });
+            })
+            .transition()
+            .duration(2500)
+            .attr("x", function(d) { return x1(+d.valor)})
     }
 }
 
@@ -360,7 +413,7 @@ function setInformacion() {
             .attr("x", function(d) { return x2(+d.valor)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
-                    return y2(d.servicio_abrev) + (y2.bandwidth() / 2) - 12.5;
+                    return y2(d.servicio_abrev) + (y2.bandwidth() / 2) - 10.5;
                 } else {
                     return y2(d.servicio_abrev) + (y2.bandwidth() / 2) + 17.5;
                 } 
@@ -473,7 +526,7 @@ function setEntretenimiento() {
             .attr("x", function(d) { return x3(+d.valor)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
-                    return y3(d.servicio_abrev) + (y3.bandwidth() / 2) - 12.5;
+                    return y3(d.servicio_abrev) + (y3.bandwidth() / 2) - 10.5;
                 } else {
                     return y3(d.servicio_abrev) + (y3.bandwidth() / 2) + 17.5;
                 } 
@@ -586,7 +639,7 @@ function setSalud() {
             .attr("x", function(d) { return x4(+d.valor)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
-                    return y4(d.servicio_abrev) + (y4.bandwidth() / 2) - 12.5;
+                    return y4(d.servicio_abrev) + (y4.bandwidth() / 2) - 10.5;
                 } else {
                     return y4(d.servicio_abrev) + (y4.bandwidth() / 2) + 17.5;
                 } 
@@ -699,7 +752,7 @@ function setAprendizaje() {
             .attr("x", function(d) { return x5(+d.valor)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
-                    return y5(d.servicio_abrev) + (y5.bandwidth() / 2) - 12.5;
+                    return y5(d.servicio_abrev) + (y5.bandwidth() / 2) - 10.5;
                 } else {
                     return y5(d.servicio_abrev) + (y5.bandwidth() / 2) + 17.5;
                 } 
@@ -812,7 +865,7 @@ function setOtras() {
             .attr("x", function(d) { return x6(+d.valor)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
-                    return y6(d.servicio_abrev) + (y6.bandwidth() / 2) - 12.5;
+                    return y6(d.servicio_abrev) + (y6.bandwidth() / 2) - 10.5;
                 } else {
                     return y6(d.servicio_abrev) + (y6.bandwidth() / 2) + 17.5;
                 } 
