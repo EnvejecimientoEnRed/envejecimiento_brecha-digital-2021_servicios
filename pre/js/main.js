@@ -51,7 +51,12 @@ function initData() {
         setEntretenimiento();
         setSalud();    
         setAprendizaje();
-        setOtras();  
+        setOtras();
+
+        //Hacemos nueva fotografía de la visualización
+        setTimeout(() => {
+            setChartCanvas();
+        }, 5000);
     }); 
 }
 
@@ -114,78 +119,88 @@ function updateChart(tipo) {
     chartViz.selectAll(`.label-${tipo}`).style('opacity', '1');
 
     currentSelected = tipo;
+
+    //Hacemos nueva fotografía de la visualización
+    setTimeout(() => {
+        setChartCanvas();
+    }, 5000);
 }
 
 function animateChart() {
     //Que evolucionen de nuevo con los mismos colores que tenían
-
-    //Círculos 
-    chart.selectAll(`.circle`)
-        .style('opacity','0');
-
-    chart.selectAll(`.circle-${currentSelected}`)
+    //Comunicación
+    chartComunicacion.selectAll('.circle')
+        .attr("cx", function(d) { return x1(0)})
         .transition()
-        .delay(3000)
-        .duration(500)
-        .style("fill", colors[1])
-        .style('opacity', function(d,i) {
-            if(i == 0 || i == 14) {
-                return '1';
-            } else {
-                return '0';
-            }
-        });
+        .duration(3000)
+        .attr("cx", function(d) { return x1(+d.valor); });
 
-    chart.selectAll(`.circle-65_74`)
+    chartComunicacion.selectAll('.label')
+        .attr("x", function(d) { return x1(0)})
         .transition()
-        .delay(3000)
-        .duration(500)
-        .style("fill", colors[0])
-        .style('opacity', function(d,i) {
-            if(i == 0 || i == 14) {
-                return '1';
-            } else {
-                return '0';
-            }
-        });
+        .duration(3000)
+        .attr("x", function(d) { return x1(+d.valor); });
+    //Información
+    chartInformacion.selectAll('.circle')
+        .attr("cx", function(d) { return x2(0)})
+        .transition()
+        .duration(3000)
+        .attr("cx", function(d) { return x2(+d.valor); });
+
+    chartInformacion.selectAll('.label')
+        .attr("x", function(d) { return x2(0)})
+        .transition()
+        .duration(3000)
+        .attr("x", function(d) { return x2(+d.valor); });
+    //Entretenimiento
+    chartEntretenimiento.selectAll('.circle')
+        .attr("cx", function(d) { return x3(0)})
+        .transition()
+        .duration(3000)
+        .attr("cx", function(d) { return x3(+d.valor); });
+
+    chartEntretenimiento.selectAll('.label')
+        .attr("x", function(d) { return x3(0)})
+        .transition()
+        .duration(3000)
+        .attr("x", function(d) { return x3(+d.valor); });
+    //Salud
+    chartSalud.selectAll('.circle')
+        .attr("cx", function(d) { return x4(0)})
+        .transition()
+        .duration(3000)
+        .attr("cx", function(d) { return x4(+d.valor); });
+
+    chartSalud.selectAll('.label')
+        .attr("x", function(d) { return x4(0)})
+        .transition()
+        .duration(3000)
+        .attr("x", function(d) { return x4(+d.valor); });
+    //Aprendizaje
+    chartAprendizaje.selectAll('.circle')
+        .attr("cx", function(d) { return x5(0)})
+        .transition()
+        .duration(3000)
+        .attr("cx", function(d) { return x5(+d.valor); });
+
+    chartAprendizaje.selectAll('.label')
+        .attr("x", function(d) { return x5(0)})
+        .transition()
+        .duration(3000)
+        .attr("x", function(d) { return x5(+d.valor); });
+    //Otras
+    chartOtras.selectAll('.circle')
+        .attr("cx", function(d) { return x6(0)})
+        .transition()
+        .duration(3000)
+        .attr("cx", function(d) { return x6(+d.valor); });
+
+    chartOtras.selectAll('.label')
+        .attr("x", function(d) { return x6(0)})
+        .transition()
+        .duration(3000)
+        .attr("x", function(d) { return x6(+d.valor); });
     
-    //Labels
-    chart.selectAll(`.label`)
-        .style('opacity','0');
-
-    chart.selectAll(`.label-${currentSelected}`)
-        .transition()
-        .delay(3000)
-        .duration(500)
-        .style('opacity', function(d,i) {
-            if(i == 0 || i == 14) {
-                return '1';
-            } else {
-                return '0';
-            }
-        });
-
-    chart.selectAll(`.label-65_74`)
-        .transition()
-        .delay(3000)
-        .duration(500)
-        .style('opacity', function(d,i) {
-            if(i == 0 || i == 14) {
-                return '1';
-            } else {
-                return '0';
-            }
-        });
-    
-    //Líneas
-    paths = chart.selectAll(".line");
-
-    paths.attr("stroke-dasharray", 768 + " " + 768)
-        .attr("stroke-dashoffset", 768)
-        .transition()
-        .ease(d3.easeLinear)
-        .attr("stroke-dashoffset", 0)
-        .duration(3000);
 
     //Hacemos nueva fotografía de la visualización
     setTimeout(() => {
@@ -221,7 +236,7 @@ function setComunicacion() {
         .nice();        
 
     xAxis1 = function(g){
-        g.call(d3.axisBottom(x1).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(d3.axisBottom(x1).ticks(3).tickFormat(function(d) { return d + '%'; }))
         g.call(function(g){
             g.selectAll('.tick line')
                 .attr('y1', '0%')
@@ -267,7 +282,7 @@ function setComunicacion() {
                 return `circle circle-${d.tipo}`;
             })
             .attr("r", '6')
-            .attr("cx", function(d) { return x1(-100)})
+            .attr("cx", function(d) { return x1(0)})
             .attr("cy", function(d) { return y1(d.servicio_abrev) + y1.bandwidth() / 2; })
             .style("fill", function(d) {
                 if(d.tipo == '65_74'){
@@ -278,8 +293,8 @@ function setComunicacion() {
             })
             .style('opacity', '1')
             .transition()
-            .duration(2500)
-            .attr("cx", function(d) { return x1(+d.valor)})
+            .duration(3000)
+            .attr("cx", function(d) { return x1(+d.valor)});
     }
 
     //Labels para los círculos
@@ -294,7 +309,7 @@ function setComunicacion() {
             .text(function(d) {
                 return d.valor.toString().replace('.',',') + '%';
             })
-            .attr("x", function(d) { return x1(-100)})
+            .attr("x", function(d) { return x1(0)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
                     return y1(d.servicio_abrev) + (y1.bandwidth() / 2) - 10.5;
@@ -312,8 +327,8 @@ function setComunicacion() {
                 }
             })
             .transition()
-            .duration(2500)
-            .attr("x", function(d) { return x1(+d.valor)})
+            .duration(3000)
+            .attr("x", function(d) { return x1(+d.valor)});
     }
 }
 
@@ -340,7 +355,7 @@ function setInformacion() {
         .nice();        
 
     xAxis2 = function(g){
-        g.call(d3.axisBottom(x2).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(d3.axisBottom(x2).ticks(3).tickFormat(function(d) { return d + '%'; }))
         g.call(function(g){
             g.selectAll('.tick line')
                 .attr('y1', '0%')
@@ -386,7 +401,7 @@ function setInformacion() {
                 return `circle circle-${d.tipo}`;
             })
             .attr("r", '6')
-            .attr("cx", function(d) { return x2(+d.valor)})
+            .attr("cx", function(d) { return x2(0)})
             .attr("cy", function(d) { return y2(d.servicio_abrev) + y2.bandwidth() / 2; })
             .style("fill", function(d) {
                 if(d.tipo == '65_74'){
@@ -395,7 +410,10 @@ function setInformacion() {
                     return colors[2];
                 }
             })
-            .style('opacity', '1');
+            .style('opacity', '1')
+            .transition()
+            .duration(3000)
+            .attr("cx", function(d) { return x2(+d.valor)});
     }
 
     //Labels para los círculos
@@ -410,7 +428,7 @@ function setInformacion() {
             .text(function(d) {
                 return d.valor.toString().replace('.',',') + '%';
             })
-            .attr("x", function(d) { return x2(+d.valor)})
+            .attr("x", function(d) { return x2(0)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
                     return y2(d.servicio_abrev) + (y2.bandwidth() / 2) - 10.5;
@@ -426,7 +444,10 @@ function setInformacion() {
                 } else {
                     return '0';
                 }
-            });
+            })
+            .transition()
+            .duration(3000)
+            .attr("x", function(d) { return x2(+d.valor)});
     }
 }
 
@@ -453,7 +474,7 @@ function setEntretenimiento() {
         .nice();        
 
     xAxis3 = function(g){
-        g.call(d3.axisBottom(x3).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(d3.axisBottom(x3).ticks(3).tickFormat(function(d) { return d + '%'; }))
         g.call(function(g){
             g.selectAll('.tick line')
                 .attr('y1', '0%')
@@ -499,7 +520,7 @@ function setEntretenimiento() {
                 return `circle circle-${d.tipo}`;
             })
             .attr("r", '6')
-            .attr("cx", function(d) { return x3(+d.valor)})
+            .attr("cx", function(d) { return x3(0)})
             .attr("cy", function(d) { return y3(d.servicio_abrev) + y3.bandwidth() / 2; })
             .style("fill", function(d) {
                 if(d.tipo == '65_74'){
@@ -508,7 +529,10 @@ function setEntretenimiento() {
                     return colors[2];
                 }
             })
-            .style('opacity', '1');
+            .style('opacity', '1')
+            .transition()
+            .duration(3000)
+            .attr("cx", function(d) { return x3(+d.valor)});
     }
 
     //Labels para los círculos
@@ -523,7 +547,7 @@ function setEntretenimiento() {
             .text(function(d) {
                 return d.valor.toString().replace('.',',') + '%';
             })
-            .attr("x", function(d) { return x3(+d.valor)})
+            .attr("x", function(d) { return x3(0)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
                     return y3(d.servicio_abrev) + (y3.bandwidth() / 2) - 10.5;
@@ -539,7 +563,10 @@ function setEntretenimiento() {
                 } else {
                     return '0';
                 }
-            });
+            })
+            .transition()
+            .duration(3000)
+            .attr("x", function(d) { return x3(+d.valor)});
     }
 }
 
@@ -566,7 +593,7 @@ function setSalud() {
         .nice();        
 
     xAxis4 = function(g){
-        g.call(d3.axisBottom(x4).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(d3.axisBottom(x4).ticks(3).tickFormat(function(d) { return d + '%'; }))
         g.call(function(g){
             g.selectAll('.tick line')
                 .attr('y1', '0%')
@@ -612,7 +639,7 @@ function setSalud() {
                 return `circle circle-${d.tipo}`;
             })
             .attr("r", '6')
-            .attr("cx", function(d) { return x4(+d.valor)})
+            .attr("cx", function(d) { return x4(0)})
             .attr("cy", function(d) { return y4(d.servicio_abrev) + y4.bandwidth() / 2; })
             .style("fill", function(d) {
                 if(d.tipo == '65_74'){
@@ -621,7 +648,10 @@ function setSalud() {
                     return colors[2];
                 }
             })
-            .style('opacity', '1');
+            .style('opacity', '1')
+            .transition()
+            .duration(3000)
+            .attr("cx", function(d) { return x4(+d.valor)});
     }
 
     //Labels para los círculos
@@ -636,7 +666,7 @@ function setSalud() {
             .text(function(d) {
                 return d.valor.toString().replace('.',',') + '%';
             })
-            .attr("x", function(d) { return x4(+d.valor)})
+            .attr("x", function(d) { return x4(0)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
                     return y4(d.servicio_abrev) + (y4.bandwidth() / 2) - 10.5;
@@ -652,7 +682,10 @@ function setSalud() {
                 } else {
                     return '0';
                 }
-            });
+            })
+            .transition()
+            .duration(3000)
+            .attr("x", function(d) { return x4(+d.valor)});
     }
 }
 
@@ -679,7 +712,7 @@ function setAprendizaje() {
         .nice();        
 
     xAxis5 = function(g){
-        g.call(d3.axisBottom(x5).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(d3.axisBottom(x5).ticks(3).tickFormat(function(d) { return d + '%'; }))
         g.call(function(g){
             g.selectAll('.tick line')
                 .attr('y1', '0%')
@@ -725,7 +758,7 @@ function setAprendizaje() {
                 return `circle circle-${d.tipo}`;
             })
             .attr("r", '6')
-            .attr("cx", function(d) { return x5(+d.valor)})
+            .attr("cx", function(d) { return x5(0)})
             .attr("cy", function(d) { return y5(d.servicio_abrev) + y5.bandwidth() / 2; })
             .style("fill", function(d) {
                 if(d.tipo == '65_74'){
@@ -734,7 +767,10 @@ function setAprendizaje() {
                     return colors[2];
                 }
             })
-            .style('opacity', '1');
+            .style('opacity', '1')
+            .transition()
+            .duration(3000)
+            .attr("cx", function(d) { return x5(+d.valor)});
     }
 
     //Labels para los círculos
@@ -749,7 +785,7 @@ function setAprendizaje() {
             .text(function(d) {
                 return d.valor.toString().replace('.',',') + '%';
             })
-            .attr("x", function(d) { return x5(+d.valor)})
+            .attr("x", function(d) { return x5(0)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
                     return y5(d.servicio_abrev) + (y5.bandwidth() / 2) - 10.5;
@@ -765,7 +801,10 @@ function setAprendizaje() {
                 } else {
                     return '0';
                 }
-            });
+            })
+            .transition()
+            .duration(3000)
+            .attr("x", function(d) { return x5(+d.valor)});
     }
 }
 
@@ -792,7 +831,7 @@ function setOtras() {
         .nice();        
 
     xAxis6 = function(g){
-        g.call(d3.axisBottom(x6).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(d3.axisBottom(x6).ticks(3).tickFormat(function(d) { return d + '%'; }))
         g.call(function(g){
             g.selectAll('.tick line')
                 .attr('y1', '0%')
@@ -838,7 +877,7 @@ function setOtras() {
                 return `circle circle-${d.tipo}`;
             })
             .attr("r", '6')
-            .attr("cx", function(d) { return x6(+d.valor)})
+            .attr("cx", function(d) { return x6(0)})
             .attr("cy", function(d) { return y6(d.servicio_abrev) + y5.bandwidth() / 2; })
             .style("fill", function(d) {
                 if(d.tipo == '65_74'){
@@ -847,7 +886,10 @@ function setOtras() {
                     return colors[2];
                 }
             })
-            .style('opacity', '1');
+            .style('opacity', '1')
+            .transition()
+            .duration(3000)
+            .attr("cx", function(d) { return x6(+d.valor)});
     }
 
     //Labels para los círculos
@@ -862,7 +904,7 @@ function setOtras() {
             .text(function(d) {
                 return d.valor.toString().replace('.',',') + '%';
             })
-            .attr("x", function(d) { return x6(+d.valor)})
+            .attr("x", function(d) { return x6(0)})
             .attr("y", function(d) { 
                 if(d.tipo == '65_74') {
                     return y6(d.servicio_abrev) + (y6.bandwidth() / 2) - 10.5;
@@ -878,7 +920,10 @@ function setOtras() {
                 } else {
                     return '0';
                 }
-            });
+            })
+            .transition()
+            .duration(3000)
+            .attr("x", function(d) { return x6(+d.valor)});
     }
 }
 
