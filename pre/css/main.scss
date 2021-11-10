@@ -251,7 +251,7 @@ body, button {
 
         //Visualización
         &__viz {
-            height: 690px;
+            height: auto;
 
             display: flex;
             flex-direction: column;
@@ -268,12 +268,12 @@ body, button {
             }
 
             //Alturas específicas para cada gráfico
-            #chart_comunicacion { height: 140px; }
-            #chart_informacion { height: 80px; }
-            #chart_entretenimiento { height: 170px; }
-            #chart_salud { height: 140px; }
-            #chart_aprendizaje { height: 110px; }
-            #chart_otras { height: 170px; }
+            #chart_comunicacion { height: 220px; }
+            #chart_informacion { height: 120px; }
+            #chart_entretenimiento { height: 270px; }
+            #chart_salud { height: 220px; }
+            #chart_aprendizaje { height: 170px; }
+            #chart_otras { height: 270px; }
 
             //Texto en gráficos
             & .tick text {

@@ -11,15 +11,15 @@ import '../css/main.scss';
 let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/envejecimiento_brecha-digital-2021_servicios/main/data/servicios_tic_2020.csv';
 let tooltip = d3.select('#tooltip');
 
-let innerData = [], nestedData = [], x_c, x_cAxis, y_c, y_cAxis;
-let chartBlockComunicacion = d3.select('#chart_comunicacion'), chartComunicacion;
-let chartBlockInformacion = d3.select('#chart_informacion'), chartInformacion;
-let chartBlockEntretenimiento = d3.select('#chart_entretenimiento'), chartEntretenimiento;
-let chartBlockSalud = d3.select('#chart_salud'), chartSalud;
-let chartBlockAprendizaje = d3.select('#chart_aprendizaje'), chartAprendizaje;
-let chartBlockOtras = d3.select('#chart_otras'), chartOtras;
+let innerData = [], nestedData = [];
+let chartBlockComunicacion = d3.select('#chart_comunicacion'), chartComunicacion, x1, xAxis1, y1, yAxis1, width1, height1;
+let chartBlockInformacion = d3.select('#chart_informacion'), chartInformacion, x2, xAxis2, y2, yAxis2, width2, height2;
+let chartBlockEntretenimiento = d3.select('#chart_entretenimiento'), chartEntretenimiento, x3, xAxis3, y3, yAxis3, width3, height3;
+let chartBlockSalud = d3.select('#chart_salud'), chartSalud, x4, xAxis4, y4, yAxis4, width4, height4;
+let chartBlockAprendizaje = d3.select('#chart_aprendizaje'), chartAprendizaje, x5, xAxis5, y5, yAxis5, width5, height5;
+let chartBlockOtras = d3.select('#chart_otras'), chartOtras, x6, xAxis6, y6, yAxis6, width6, height6;
 let currentSelected = 'ninguno';
-let margin = {top: 15, right: 10, bottom: 17.5, left: 80}, width, height;
+let margin = {top: 5, right: 20, bottom: 17.5, left: 190};
 let colors = ['#76B8B8', '#8F480D', '#d8d8d8'];
 
 initData();
@@ -30,8 +30,6 @@ function initData() {
     d3.text(dataSource, function(err, data) {
         if(err) throw err;
         data = csv.parse(data);
-
-        console.log(data);
 
         innerData = data.map(function(d) {
             return {
@@ -44,214 +42,20 @@ function initData() {
         });
 
         nestedData = d3.nest()
-        .key(function(d) { return d.servicio_padre; })
-        .key(function(d) { return d.servicio_abrev; })
-        .entries(innerData);
+            .key(function(d) { return d.servicio_padre; })
+            .entries(innerData);
 
-        // let keys = data.columns.slice(2);
-
-        // nestedData = keys.map(function(item) {
-        //     let aux = [];
-        //     innerData.map(function(d) {
-        //         aux.push({'anio':d.anio, 'valor': d[item]});
-        //     });
-        //     return {'key': item, 'data': aux};            
-        // });
-
-        // //Desarrollo de la visualización
-        // width = parseInt(chartBlock.style('width')) - margin.left - margin.right,
-        // height = parseInt(chartBlock.style('height')) - margin.top - margin.bottom;
-
-        // chart = chartBlock
-        //     .append("svg")
-        //         .attr("width", width + margin.left + margin.right)
-        //         .attr("height", height + margin.top + margin.bottom)
-        //     .append("g")
-        //         .attr("transform",
-        //             "translate(" + margin.left + "," + margin.top + ")");
-
-        // x_c = d3.scaleBand()
-        //     .domain(nestedData[0].data.map(function(d) { return d.anio; }))
-        //     .range([0, width]);
-
-        // x_cAxis = function(g){
-        //     g.call(d3.axisBottom(x_c).tickValues(x_c.domain().filter(function(d,i) { return !(i%3); })))
-        //     g.call(function(g){g.selectAll('.tick line').remove();})
-        //     g.call(function(g){g.select('.domain').remove()});
-        // }
-
-        // chart.append("g")
-        //     .attr("transform", "translate(0," + height + ")")
-        //     .attr('class','x_c-axis')
-        //     .call(x_cAxis);
-
-        // // Add Y axis
-        // y_c = d3.scaleLinear()
-        //     .domain([0, 100])
-        //     .range([height, 10]);
-
-        // y_cAxis = function(svg){
-        //     svg.call(d3.axisLeft(y_c).ticks(5).tickFormat(function(d) { return d + '%'; }))
-        //     svg.call(function(g){
-        //         g.selectAll('.tick line')
-        //             .attr('class', function(d,i) {
-        //                 if (d == 0) {
-        //                     return 'line-special';
-        //                 }
-        //             })
-        //             .attr("x1", '0')
-        //             .attr("x2", '' + width + '')
-        //     })
-        //     svg.call(function(g){g.select('.domain').remove()})
-        // }      
-
-        // chart.append("g")
-        //     .attr('class','y_c-axis')
-        //     .call(y_cAxis);
-
-        // //Línea
-        // line = d3.line()
-        //     .x(function(d) { return x_c(d.anio) + x_c.bandwidth() / 2; })
-        //     .y(function(d) { return y_c(+d.valor); });
-
-        // paths = chart.selectAll(".line")
-        //     .data(nestedData)
-        //     .enter()
-        //     .append("path")
-        //     .attr('class', 'line')
-        //     .attr("fill", "none")
-        //     .attr("stroke", function(d){
-        //         if (d.key == '65_74') {
-        //             return colors[0];
-        //         } else {
-        //             return colors[2];
-        //         }
-        //     })
-        //     .attr("stroke-width", 2)
-        //     .attr('d', function(d) {
-        //         return line(d.data);
-        //     });
-
-        // paths.attr("stroke-dasharray", 768 + " " + 768)
-        //     .attr("stroke-dashoffset", 768)
-        //     .transition()
-        //     .ease(d3.easeLinear)
-        //     .attr("stroke-dashoffset", 0)
-        //     .duration(3000);
-
-        // //Circles > Primero y último
-        // for(let i = 0; i < nestedData.length; i++) {
-        //     chart.selectAll('init')
-        //         .data(nestedData[i].data)
-        //         .enter()
-        //         .append('circle')
-        //         .attr('class', function(d) {
-        //             return `circle circle-${nestedData[i].key}`;
-        //         })
-        //         .attr("r", '3.5')
-        //         .attr("cx", function(d) { return x_c(+d.anio) + x_c.bandwidth() / 2})
-        //         .attr("cy", function(d) { return y_c(+d.valor); })
-        //         .style("fill", colors[0])
-        //         .style('opacity', '0');
-        // }
-
-        // //Labels > Primero y último
-        // for(let i = 0; i < nestedData.length; i++) {
-        //     chart.selectAll('init')
-        //         .data(nestedData[i].data)
-        //         .enter()
-        //         .append('text')
-        //         .attr('class', function(d) {
-        //             return `label label-${nestedData[i].key}`;
-        //         })
-        //         .text(function(d) {
-        //             return d.valor.toString().replace('.',',') + '%';
-        //         })
-        //         .attr("x", function(d) { return x_c(+d.anio) + x_c.bandwidth() / 2})
-        //         .attr("y", function(d) { return y_c(+d.valor) - 10; })
-        //         .attr('font-size', '12px')
-        //         .attr('text-anchor', 'middle')
-        //         .style('opacity', '0');
-        // }
-        
-        // //Mostramos círculos
-        // chart.selectAll('.circle-65_74')
-        //     .transition()
-        //     .delay(3000)
-        //     .duration(500)
-        //     .style('opacity', function(d,i) {
-        //         if(i == 0 || i == 14) {
-        //             return '1';
-        //         } else {
-        //             return '0';
-        //         }
-        //     }); 
-
-        // //Mostramos labels
-        // chart.selectAll('.label-65_74')
-        //     .transition()
-        //     .delay(3000)
-        //     .duration(500)
-        //     .style('opacity', function(d,i) {
-        //         if(i == 0 || i == 14) {
-        //             return '1';
-        //         } else {
-        //             return '0';
-        //         }
-        //     });  
+        setComunicacion();
+        setInformacion();
+        setEntretenimiento();
+        setSalud();    
+        setAprendizaje();
+        setOtras();  
     }); 
 }
 
 function updateChart(tipo) {
-    //Ponemos los datos de la brecha
-    chart.selectAll(".line")
-        .attr("stroke", function(d){
-            if (d.key == '65_74') {
-                return colors[0];
-            } else if (d.key == tipo) {
-                return colors[1];
-            } else {
-                return colors[2];
-            }
-        })
-        .attr('d', function(d) {
-            return line(d.data);
-        });
-
-
-    //Círculos    
-    chart.selectAll(`.circle-${currentSelected}`)
-        .style('opacity','0');
-
-    chart.selectAll(`.circle-${tipo}`)
-        .style("fill", colors[1])
-        .style('opacity', function(d,i) {
-            if(i == 0 || i == 14) {
-                return '1';
-            } else {
-                return '0';
-            }
-        });
-    
-    //Labels
-    chart.selectAll(`.label-${currentSelected}`)
-        .style('opacity','0');
-
-    chart.selectAll(`.label-${tipo}`)
-        .style('opacity', function(d,i) {
-            if(i == 0 || i == 14) {
-                return '1';
-            } else {
-                return '0';
-            }
-        }); 
-
-    currentSelected = tipo;
-    
-    //Hacemos nueva fotografía de la visualización
-    setTimeout(() => {
-        setChartCanvas();
-    }, 5000);
+    console.log(tipo);
 }
 
 function animateChart() {
@@ -334,6 +138,685 @@ function animateChart() {
 document.getElementById('replay').addEventListener('click', function() {
     animateChart();
 });
+
+//Helpers de visualización
+function setComunicacion() {
+    let dataCom = d3.nest()
+        .key(function(d) { return d.servicio_abrev; })
+        .entries(nestedData[0].values);
+
+    width1 = parseInt(chartBlockComunicacion.style('width')) - margin.left - margin.right,
+    height1 = parseInt(chartBlockComunicacion.style('height')) - margin.top - margin.bottom;
+
+    chartComunicacion = chartBlockComunicacion
+        .append("svg")
+            .attr("width", width1 + margin.left + margin.right)
+            .attr("height", height1 + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+    //Estilos para eje X
+    x1 = d3.scaleLinear()
+        .domain([0,100])
+        .range([0, width1])
+        .nice();        
+
+    xAxis1 = function(g){
+        g.call(d3.axisBottom(x1).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(function(g){
+            g.selectAll('.tick line')
+                .attr('y1', '0%')
+                .attr('y2', `-${height1}`)
+        })
+        g.call(function(g){g.select('.domain').remove()});
+    }
+
+    chartComunicacion.append("g")
+        .attr("transform", "translate(0," + height1 + ")")
+        .call(xAxis1);
+
+    //Estilos eje Y
+    y1 = d3.scaleBand()
+        .domain(dataCom.map(function(d) { return d.key; }))
+        .range([height1, 0]);
+
+    yAxis1 = function(svg){
+        svg.call(d3.axisLeft(y1).tickFormat(function(d) { return d; }))
+        svg.call(function(g){
+            g.selectAll('.tick line')
+                .attr('class', function(d,i) {
+                    if (d == 0) {
+                        return 'line-special';
+                    }
+                })
+                .attr("x1", '0')
+                .attr("x2", '' + width1 + '')
+        })
+        svg.call(function(g){g.select('.domain').remove()});
+    }        
+
+    chartComunicacion.append("g")
+        .call(yAxis1);
+
+    //Círculos para cada bloque
+    for(let i = 0; i < dataCom.length; i++) {
+        chartComunicacion.selectAll('init')
+            .data(dataCom[i].values)
+            .enter()
+            .append('circle')
+            .attr('class', function(d) {
+                return `circle circle-${d.tipo}`;
+            })
+            .attr("r", '6')
+            .attr("cx", function(d) { return x1(+d.valor)})
+            .attr("cy", function(d) { return y1(d.servicio_abrev) + y1.bandwidth() / 2; })
+            .style("fill", function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return colors[0];
+                } else {
+                    return colors[2];
+                }
+            })
+            .style('opacity', '1');
+    }
+
+    //Labels para los círculos
+    for(let i = 0; i < dataCom.length; i++) {
+        chartComunicacion.selectAll('init')
+            .data(dataCom[i].values)
+            .enter()
+            .append('text')
+            .attr('class', function(d) {
+                return `label label-${d.tipo}`;
+            })
+            .text(function(d) {
+                return d.valor.toString().replace('.',',') + '%';
+            })
+            .attr("x", function(d) { return x1(+d.valor)})
+            .attr("y", function(d) { 
+                if(d.tipo == 'Edad: De 65 a 74 años') {
+                    return y1(d.servicio_abrev) + (y1.bandwidth() / 2) - 12.5;
+                } else {
+                    return y1(d.servicio_abrev) + (y1.bandwidth() / 2) + 17.5;
+                } 
+            })
+            .attr('font-size', '12px')
+            .attr('text-anchor', 'middle')
+            .style('opacity', function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return '1';
+                } else {
+                    return '0';
+                }
+            });
+    }
+}
+
+function setInformacion() {
+    let dataInf = d3.nest()
+        .key(function(d) { return d.servicio_abrev; })
+        .entries(nestedData[1].values);
+
+    width2 = parseInt(chartBlockInformacion.style('width')) - margin.left - margin.right,
+    height2 = parseInt(chartBlockInformacion.style('height')) - margin.top - margin.bottom;
+
+    chartInformacion = chartBlockInformacion
+        .append("svg")
+            .attr("width", width2 + margin.left + margin.right)
+            .attr("height", height2 + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+    //Estilos para eje X
+    x2 = d3.scaleLinear()
+        .domain([0,100])
+        .range([0, width2])
+        .nice();        
+
+    xAxis2 = function(g){
+        g.call(d3.axisBottom(x2).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(function(g){
+            g.selectAll('.tick line')
+                .attr('y1', '0%')
+                .attr('y2', `-${height2}`)
+        })
+        g.call(function(g){g.select('.domain').remove()});
+    }
+
+    chartInformacion.append("g")
+        .attr("transform", "translate(0," + height2 + ")")
+        .call(xAxis2);
+
+    //Estilos eje Y
+    y2 = d3.scaleBand()
+        .domain(dataInf.map(function(d) { return d.key; }))
+        .range([height2, 0]);
+
+    yAxis2 = function(svg){
+        svg.call(d3.axisLeft(y2).tickFormat(function(d) { return d; }))
+        svg.call(function(g){
+            g.selectAll('.tick line')
+                .attr('class', function(d,i) {
+                    if (d == 0) {
+                        return 'line-special';
+                    }
+                })
+                .attr("x1", '0')
+                .attr("x2", '' + width2 + '')
+        })
+        svg.call(function(g){g.select('.domain').remove()});
+    }        
+
+    chartInformacion.append("g")
+        .call(yAxis2);
+
+    //Círculos para cada bloque
+    for(let i = 0; i < dataInf.length; i++) {
+        chartInformacion.selectAll('init')
+            .data(dataInf[i].values)
+            .enter()
+            .append('circle')
+            .attr('class', function(d) {
+                return `circle circle-${d.tipo}`;
+            })
+            .attr("r", '6')
+            .attr("cx", function(d) { return x2(+d.valor)})
+            .attr("cy", function(d) { return y2(d.servicio_abrev) + y2.bandwidth() / 2; })
+            .style("fill", function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return colors[0];
+                } else {
+                    return colors[2];
+                }
+            })
+            .style('opacity', '1');
+    }
+
+    //Labels para los círculos
+    for(let i = 0; i < dataInf.length; i++) {
+        chartInformacion.selectAll('init')
+            .data(dataInf[i].values)
+            .enter()
+            .append('text')
+            .attr('class', function(d) {
+                return `label label-${d.tipo}`;
+            })
+            .text(function(d) {
+                return d.valor.toString().replace('.',',') + '%';
+            })
+            .attr("x", function(d) { return x2(+d.valor)})
+            .attr("y", function(d) { 
+                if(d.tipo == 'Edad: De 65 a 74 años') {
+                    return y2(d.servicio_abrev) + (y2.bandwidth() / 2) - 12.5;
+                } else {
+                    return y2(d.servicio_abrev) + (y2.bandwidth() / 2) + 17.5;
+                } 
+            })
+            .attr('font-size', '12px')
+            .attr('text-anchor', 'middle')
+            .style('opacity', function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return '1';
+                } else {
+                    return '0';
+                }
+            });
+    }
+}
+
+function setEntretenimiento() {
+    let dataEnt = d3.nest()
+        .key(function(d) { return d.servicio_abrev; })
+        .entries(nestedData[2].values);
+
+    width3 = parseInt(chartBlockEntretenimiento.style('width')) - margin.left - margin.right,
+    height3 = parseInt(chartBlockEntretenimiento.style('height')) - margin.top - margin.bottom;
+
+    chartEntretenimiento = chartBlockEntretenimiento
+        .append("svg")
+            .attr("width", width3 + margin.left + margin.right)
+            .attr("height", height3 + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+    //Estilos para eje X
+    x3 = d3.scaleLinear()
+        .domain([0,100])
+        .range([0, width3])
+        .nice();        
+
+    xAxis3 = function(g){
+        g.call(d3.axisBottom(x3).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(function(g){
+            g.selectAll('.tick line')
+                .attr('y1', '0%')
+                .attr('y2', `-${height3}`)
+        })
+        g.call(function(g){g.select('.domain').remove()});
+    }
+
+    chartEntretenimiento.append("g")
+        .attr("transform", "translate(0," + height3 + ")")
+        .call(xAxis3);
+
+    //Estilos eje Y
+    y3 = d3.scaleBand()
+        .domain(dataEnt.map(function(d) { return d.key; }))
+        .range([height3, 0]);
+
+    yAxis3 = function(svg){
+        svg.call(d3.axisLeft(y3).tickFormat(function(d) { return d; }))
+        svg.call(function(g){
+            g.selectAll('.tick line')
+                .attr('class', function(d,i) {
+                    if (d == 0) {
+                        return 'line-special';
+                    }
+                })
+                .attr("x1", '0')
+                .attr("x2", '' + width3 + '')
+        })
+        svg.call(function(g){g.select('.domain').remove()});
+    }        
+
+    chartEntretenimiento.append("g")
+        .call(yAxis3);
+
+    //Círculos para cada bloque
+    for(let i = 0; i < dataEnt.length; i++) {
+        chartEntretenimiento.selectAll('init')
+            .data(dataEnt[i].values)
+            .enter()
+            .append('circle')
+            .attr('class', function(d) {
+                return `circle circle-${d.tipo}`;
+            })
+            .attr("r", '6')
+            .attr("cx", function(d) { return x3(+d.valor)})
+            .attr("cy", function(d) { return y3(d.servicio_abrev) + y3.bandwidth() / 2; })
+            .style("fill", function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return colors[0];
+                } else {
+                    return colors[2];
+                }
+            })
+            .style('opacity', '1');
+    }
+
+    //Labels para los círculos
+    for(let i = 0; i < dataEnt.length; i++) {
+        chartEntretenimiento.selectAll('init')
+            .data(dataEnt[i].values)
+            .enter()
+            .append('text')
+            .attr('class', function(d) {
+                return `label label-${d.tipo}`;
+            })
+            .text(function(d) {
+                return d.valor.toString().replace('.',',') + '%';
+            })
+            .attr("x", function(d) { return x3(+d.valor)})
+            .attr("y", function(d) { 
+                if(d.tipo == 'Edad: De 65 a 74 años') {
+                    return y3(d.servicio_abrev) + (y3.bandwidth() / 2) - 12.5;
+                } else {
+                    return y3(d.servicio_abrev) + (y3.bandwidth() / 2) + 17.5;
+                } 
+            })
+            .attr('font-size', '12px')
+            .attr('text-anchor', 'middle')
+            .style('opacity', function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return '1';
+                } else {
+                    return '0';
+                }
+            });
+    }
+}
+
+function setSalud() {
+    let dataSalud = d3.nest()
+        .key(function(d) { return d.servicio_abrev; })
+        .entries(nestedData[3].values);
+
+    width4 = parseInt(chartBlockSalud.style('width')) - margin.left - margin.right,
+    height4 = parseInt(chartBlockSalud.style('height')) - margin.top - margin.bottom;
+
+    chartSalud = chartBlockSalud
+        .append("svg")
+            .attr("width", width4 + margin.left + margin.right)
+            .attr("height", height4 + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+    //Estilos para eje X
+    x4 = d3.scaleLinear()
+        .domain([0,100])
+        .range([0, width4])
+        .nice();        
+
+    xAxis4 = function(g){
+        g.call(d3.axisBottom(x4).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(function(g){
+            g.selectAll('.tick line')
+                .attr('y1', '0%')
+                .attr('y2', `-${height4}`)
+        })
+        g.call(function(g){g.select('.domain').remove()});
+    }
+
+    chartSalud.append("g")
+        .attr("transform", "translate(0," + height4 + ")")
+        .call(xAxis4);
+
+    //Estilos eje Y
+    y4 = d3.scaleBand()
+        .domain(dataSalud.map(function(d) { return d.key; }))
+        .range([height4, 0]);
+
+    yAxis4 = function(svg){
+        svg.call(d3.axisLeft(y4).tickFormat(function(d) { return d; }))
+        svg.call(function(g){
+            g.selectAll('.tick line')
+                .attr('class', function(d,i) {
+                    if (d == 0) {
+                        return 'line-special';
+                    }
+                })
+                .attr("x1", '0')
+                .attr("x2", '' + width4 + '')
+        })
+        svg.call(function(g){g.select('.domain').remove()});
+    }        
+
+    chartSalud.append("g")
+        .call(yAxis4);
+
+    //Círculos para cada bloque
+    for(let i = 0; i < dataSalud.length; i++) {
+        chartSalud.selectAll('init')
+            .data(dataSalud[i].values)
+            .enter()
+            .append('circle')
+            .attr('class', function(d) {
+                return `circle circle-${d.tipo}`;
+            })
+            .attr("r", '6')
+            .attr("cx", function(d) { return x4(+d.valor)})
+            .attr("cy", function(d) { return y4(d.servicio_abrev) + y4.bandwidth() / 2; })
+            .style("fill", function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return colors[0];
+                } else {
+                    return colors[2];
+                }
+            })
+            .style('opacity', '1');
+    }
+
+    //Labels para los círculos
+    for(let i = 0; i < dataSalud.length; i++) {
+        chartSalud.selectAll('init')
+            .data(dataSalud[i].values)
+            .enter()
+            .append('text')
+            .attr('class', function(d) {
+                return `label label-${d.tipo}`;
+            })
+            .text(function(d) {
+                return d.valor.toString().replace('.',',') + '%';
+            })
+            .attr("x", function(d) { return x4(+d.valor)})
+            .attr("y", function(d) { 
+                if(d.tipo == 'Edad: De 65 a 74 años') {
+                    return y4(d.servicio_abrev) + (y4.bandwidth() / 2) - 12.5;
+                } else {
+                    return y4(d.servicio_abrev) + (y4.bandwidth() / 2) + 17.5;
+                } 
+            })
+            .attr('font-size', '12px')
+            .attr('text-anchor', 'middle')
+            .style('opacity', function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return '1';
+                } else {
+                    return '0';
+                }
+            });
+    }
+}
+
+function setAprendizaje() {
+    let dataAprendizaje = d3.nest()
+        .key(function(d) { return d.servicio_abrev; })
+        .entries(nestedData[4].values);
+
+    width5 = parseInt(chartBlockAprendizaje.style('width')) - margin.left - margin.right,
+    height5 = parseInt(chartBlockAprendizaje.style('height')) - margin.top - margin.bottom;
+
+    chartAprendizaje = chartBlockAprendizaje
+        .append("svg")
+            .attr("width", width5 + margin.left + margin.right)
+            .attr("height", height5 + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+    //Estilos para eje X
+    x5 = d3.scaleLinear()
+        .domain([0,100])
+        .range([0, width5])
+        .nice();        
+
+    xAxis5 = function(g){
+        g.call(d3.axisBottom(x5).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(function(g){
+            g.selectAll('.tick line')
+                .attr('y1', '0%')
+                .attr('y2', `-${height5}`)
+        })
+        g.call(function(g){g.select('.domain').remove()});
+    }
+
+    chartAprendizaje.append("g")
+        .attr("transform", "translate(0," + height5 + ")")
+        .call(xAxis5);
+
+    //Estilos eje Y
+    y5 = d3.scaleBand()
+        .domain(dataAprendizaje.map(function(d) { return d.key; }))
+        .range([height5, 0]);
+
+    yAxis5 = function(svg){
+        svg.call(d3.axisLeft(y5).tickFormat(function(d) { return d; }))
+        svg.call(function(g){
+            g.selectAll('.tick line')
+                .attr('class', function(d,i) {
+                    if (d == 0) {
+                        return 'line-special';
+                    }
+                })
+                .attr("x1", '0')
+                .attr("x2", '' + width5 + '')
+        })
+        svg.call(function(g){g.select('.domain').remove()});
+    }        
+
+    chartAprendizaje.append("g")
+        .call(yAxis5);
+
+    //Círculos para cada bloque
+    for(let i = 0; i < dataAprendizaje.length; i++) {
+        chartAprendizaje.selectAll('init')
+            .data(dataAprendizaje[i].values)
+            .enter()
+            .append('circle')
+            .attr('class', function(d) {
+                return `circle circle-${d.tipo}`;
+            })
+            .attr("r", '6')
+            .attr("cx", function(d) { return x5(+d.valor)})
+            .attr("cy", function(d) { return y5(d.servicio_abrev) + y5.bandwidth() / 2; })
+            .style("fill", function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return colors[0];
+                } else {
+                    return colors[2];
+                }
+            })
+            .style('opacity', '1');
+    }
+
+    //Labels para los círculos
+    for(let i = 0; i < dataAprendizaje.length; i++) {
+        chartAprendizaje.selectAll('init')
+            .data(dataAprendizaje[i].values)
+            .enter()
+            .append('text')
+            .attr('class', function(d) {
+                return `label label-${d.tipo}`;
+            })
+            .text(function(d) {
+                return d.valor.toString().replace('.',',') + '%';
+            })
+            .attr("x", function(d) { return x5(+d.valor)})
+            .attr("y", function(d) { 
+                if(d.tipo == 'Edad: De 65 a 74 años') {
+                    return y5(d.servicio_abrev) + (y5.bandwidth() / 2) - 12.5;
+                } else {
+                    return y5(d.servicio_abrev) + (y5.bandwidth() / 2) + 17.5;
+                } 
+            })
+            .attr('font-size', '12px')
+            .attr('text-anchor', 'middle')
+            .style('opacity', function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return '1';
+                } else {
+                    return '0';
+                }
+            });
+    }
+}
+
+function setOtras() {
+    let dataOtras = d3.nest()
+        .key(function(d) { return d.servicio_abrev; })
+        .entries(nestedData[5].values);
+
+    width6 = parseInt(chartBlockOtras.style('width')) - margin.left - margin.right,
+    height6 = parseInt(chartBlockOtras.style('height')) - margin.top - margin.bottom;
+
+    chartOtras = chartBlockOtras
+        .append("svg")
+            .attr("width", width6 + margin.left + margin.right)
+            .attr("height", height6 + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+    //Estilos para eje X
+    x6 = d3.scaleLinear()
+        .domain([0,100])
+        .range([0, width6])
+        .nice();        
+
+    xAxis6 = function(g){
+        g.call(d3.axisBottom(x6).ticks(5).tickFormat(function(d) { return d + '%'; }))
+        g.call(function(g){
+            g.selectAll('.tick line')
+                .attr('y1', '0%')
+                .attr('y2', `-${height6}`)
+        })
+        g.call(function(g){g.select('.domain').remove()});
+    }
+
+    chartOtras.append("g")
+        .attr("transform", "translate(0," + height6 + ")")
+        .call(xAxis6);
+
+    //Estilos eje Y
+    y6 = d3.scaleBand()
+        .domain(dataOtras.map(function(d) { return d.key; }))
+        .range([height6, 0]);
+
+    yAxis6 = function(svg){
+        svg.call(d3.axisLeft(y6).tickFormat(function(d) { return d; }))
+        svg.call(function(g){
+            g.selectAll('.tick line')
+                .attr('class', function(d,i) {
+                    if (d == 0) {
+                        return 'line-special';
+                    }
+                })
+                .attr("x1", '0')
+                .attr("x2", '' + width6 + '')
+        })
+        svg.call(function(g){g.select('.domain').remove()});
+    }        
+
+    chartOtras.append("g")
+        .call(yAxis6);
+
+    //Círculos para cada bloque
+    for(let i = 0; i < dataOtras.length; i++) {
+        chartOtras.selectAll('init')
+            .data(dataOtras[i].values)
+            .enter()
+            .append('circle')
+            .attr('class', function(d) {
+                return `circle circle-${d.tipo}`;
+            })
+            .attr("r", '6')
+            .attr("cx", function(d) { return x6(+d.valor)})
+            .attr("cy", function(d) { return y6(d.servicio_abrev) + y5.bandwidth() / 2; })
+            .style("fill", function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return colors[0];
+                } else {
+                    return colors[2];
+                }
+            })
+            .style('opacity', '1');
+    }
+
+    //Labels para los círculos
+    for(let i = 0; i < dataOtras.length; i++) {
+        chartOtras.selectAll('init')
+            .data(dataOtras[i].values)
+            .enter()
+            .append('text')
+            .attr('class', function(d) {
+                return `label label-${d.tipo}`;
+            })
+            .text(function(d) {
+                return d.valor.toString().replace('.',',') + '%';
+            })
+            .attr("x", function(d) { return x6(+d.valor)})
+            .attr("y", function(d) { 
+                if(d.tipo == 'Edad: De 65 a 74 años') {
+                    return y6(d.servicio_abrev) + (y6.bandwidth() / 2) - 12.5;
+                } else {
+                    return y6(d.servicio_abrev) + (y6.bandwidth() / 2) + 17.5;
+                } 
+            })
+            .attr('font-size', '12px')
+            .attr('text-anchor', 'middle')
+            .style('opacity', function(d) {
+                if(d.tipo == 'Edad: De 65 a 74 años'){
+                    return '1';
+                } else {
+                    return '0';
+                }
+            });
+    }
+}
 
 ///// REDES SOCIALES /////
 setRRSSLinks();
