@@ -20,7 +20,7 @@ let chartBlockSalud = d3.select('#chart_empleo'), chartSalud, x4, xAxis4, y4, yA
 let chartBlockAprendizaje = d3.select('#chart_aprendizaje'), chartAprendizaje, x5, xAxis5, y5, yAxis5, width5, height5;
 let chartBlockOtras = d3.select('#chart_otras'), chartOtras, x6, xAxis6, y6, yAxis6, width6, height6;
 let currentSelected = 'ninguno';
-let margin = {top: 5, right: 20, bottom: 17.5, left: 190};
+let margin = {top: 5, right: 20, bottom: 17.5, left: 182.5};
 let colors = ['#76B8B8', '#8F480D', '#d8d8d8'];
 
 initData();
@@ -36,9 +36,9 @@ function initData() {
             return {
                 servicio: d.servicio,
                 servicio_padre: d.servicio_padre,
-                servicio_abrev: d.servicio_abrev_viz,
+                servicio_abrev: d.servicio_abrev,
                 tipo: d.tipo,
-                valor: +d.valor.replace(',','.')
+                valor: +d.Total.replace(',','.')
             }
         });
 
@@ -217,6 +217,8 @@ function setComunicacion() {
     let dataCom = d3.nest()
         .key(function(d) { return d.servicio_abrev; })
         .entries(nestedData[0].values);
+
+    console.log(dataCom);
 
     width1 = parseInt(chartBlockComunicacion.style('width')) - margin.left - margin.right,
     height1 = parseInt(chartBlockComunicacion.style('height')) - margin.top - margin.bottom;
