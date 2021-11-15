@@ -199,14 +199,14 @@ body, button {
 
         &__legend {
             width: 100%;
-            margin-top: 12px;
-
+            
             display: flex;
             justify-content: flex-end;
             flex-wrap: wrap;            
 
             &--item {
                 position: relative;
+                margin-top: 8px;
 
                 display: flex;
                 align-items: center;
