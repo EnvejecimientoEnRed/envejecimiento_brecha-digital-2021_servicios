@@ -216,8 +216,6 @@ function setComunicacion() {
         .key(function(d) { return d.servicio_abrev; })
         .entries(nestedData[0].values);
 
-    console.log(dataCom);
-
     width1 = parseInt(chartBlockComunicacion.style('width')) - margin.left - margin.right,
     height1 = parseInt(chartBlockComunicacion.style('height')) - margin.top - margin.bottom;
 
@@ -947,8 +945,8 @@ function setChartHeight(iframe_fijo) {
     if(iframe_fijo) {
         //El contenedor y el main reciben una altura fija
         //La altura del gráfico se ajusta más a lo disponible en el main, quitando títulos, lógica, ejes y pie de gráfico
-        document.getElementsByClassName('container')[0].style.height = '612px';
-        document.getElementsByClassName('main')[0].style.height = '580px';
+        document.getElementsByClassName('container')[0].style.height = '1432px';
+        document.getElementsByClassName('main')[0].style.height = '1400px';
 
         let titleBlock = document.getElementsByClassName('b-title')[0].clientHeight;
         let logicBlock = document.getElementsByClassName('chart__logics')[0].clientHeight;
@@ -957,8 +955,8 @@ function setChartHeight(iframe_fijo) {
 
         //Comprobar previamente la altura que le demos al MAIN. El estado base es 588 pero podemos hacerlo más o menos alto en función de nuestros intereses
 
-        let height = 580; //Altura total del main
-        document.getElementsByClassName('chart__viz')[0].style.height = height - titleBlock - logicBlock - footerBlock - footerTop - containerPadding - marginTitle - marginLogics + 'px';
+        let height = 1094; //Altura total del main
+        document.getElementsByClassName('chart__viz')[0].style.height = height + 'px';
     } else {
         document.getElementsByClassName('main')[0].style.height = document.getElementsByClassName('main')[0].clientHeight + 'px';
     }    
