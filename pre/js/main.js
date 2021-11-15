@@ -8,15 +8,15 @@ import * as d3 from 'd3';
 import '../css/main.scss';
 
 ///// VISUALIZACIÓN DEL GRÁFICO //////
-let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/envejecimiento_brecha-digital-2021_servicios/main/data/servicios_tic_2020.csv';
+let dataSource = 'https://raw.githubusercontent.com/CarlosMunozDiazCSIC/envejecimiento_brecha-digital-2021_servicios/main/data/servicios_tic_2021.csv';
 let tooltip = d3.select('#tooltip');
 
 let innerData = [], nestedData = [];
 let chartViz = d3.select('.chart__viz');
 let chartBlockComunicacion = d3.select('#chart_comunicacion'), chartComunicacion, x1, xAxis1, y1, yAxis1, width1, height1;
 let chartBlockInformacion = d3.select('#chart_informacion'), chartInformacion, x2, xAxis2, y2, yAxis2, width2, height2;
-let chartBlockEntretenimiento = d3.select('#chart_entretenimiento'), chartEntretenimiento, x3, xAxis3, y3, yAxis3, width3, height3;
-let chartBlockSalud = d3.select('#chart_salud'), chartSalud, x4, xAxis4, y4, yAxis4, width4, height4;
+let chartBlockEntretenimiento = d3.select('#chart_politica'), chartEntretenimiento, x3, xAxis3, y3, yAxis3, width3, height3;
+let chartBlockSalud = d3.select('#chart_empleo'), chartSalud, x4, xAxis4, y4, yAxis4, width4, height4;
 let chartBlockAprendizaje = d3.select('#chart_aprendizaje'), chartAprendizaje, x5, xAxis5, y5, yAxis5, width5, height5;
 let chartBlockOtras = d3.select('#chart_otras'), chartOtras, x6, xAxis6, y6, yAxis6, width6, height6;
 let currentSelected = 'ninguno';
