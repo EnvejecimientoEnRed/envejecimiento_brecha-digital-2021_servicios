@@ -15,8 +15,8 @@ let innerData = [], nestedData = [];
 let chartViz = d3.select('.chart__viz');
 let chartBlockComunicacion = d3.select('#chart_comunicacion'), chartComunicacion, x1, xAxis1, y1, yAxis1, width1, height1;
 let chartBlockInformacion = d3.select('#chart_informacion'), chartInformacion, x2, xAxis2, y2, yAxis2, width2, height2;
-let chartBlockEntretenimiento = d3.select('#chart_politica'), chartEntretenimiento, x3, xAxis3, y3, yAxis3, width3, height3;
-let chartBlockSalud = d3.select('#chart_empleo'), chartSalud, x4, xAxis4, y4, yAxis4, width4, height4;
+let chartBlockPolitica = d3.select('#chart_politica'), chartPolitica, x3, xAxis3, y3, yAxis3, width3, height3;
+let chartBlockEmpleo = d3.select('#chart_empleo'), chartEmpleo, x4, xAxis4, y4, yAxis4, width4, height4;
 let chartBlockAprendizaje = d3.select('#chart_aprendizaje'), chartAprendizaje, x5, xAxis5, y5, yAxis5, width5, height5;
 let chartBlockOtras = d3.select('#chart_otras'), chartOtras, x6, xAxis6, y6, yAxis6, width6, height6;
 let currentSelected = 'ninguno';
@@ -48,8 +48,8 @@ function initData() {
 
         setComunicacion();
         setInformacion();
-        setEntretenimiento();
-        setSalud();    
+        setPolitica();
+        setEmpleo();    
         setAprendizaje();
         setOtras();
 
@@ -81,21 +81,21 @@ function updateChart(tipo) {
         circlesInf[i].style.fill = colors[1];
         chartInformacion.node().appendChild(circlesInf[i]);
     }
-    ////Entretenimiento
-    let circlesEnt = chartEntretenimiento.selectAll(`.circle-${tipo}`).nodes();
-    chartEntretenimiento.selectAll(`.circle-${tipo}`).remove();
+    ////Politica
+    let circlesEnt = chartPolitica.selectAll(`.circle-${tipo}`).nodes();
+    chartPolitica.selectAll(`.circle-${tipo}`).remove();
 
     for(let i = 0; i < circlesEnt.length; i++) {
         circlesEnt[i].style.fill = colors[1];
-        chartEntretenimiento.node().appendChild(circlesEnt[i]);
+        chartPolitica.node().appendChild(circlesEnt[i]);
     }
-    ////Salud
-    let circlesSalud = chartSalud.selectAll(`.circle-${tipo}`).nodes();
-    chartSalud.selectAll(`.circle-${tipo}`).remove();
+    ////Empleo
+    let circlesEmpleo = chartEmpleo.selectAll(`.circle-${tipo}`).nodes();
+    chartEmpleo.selectAll(`.circle-${tipo}`).remove();
 
-    for(let i = 0; i < circlesSalud.length; i++) {
-        circlesSalud[i].style.fill = colors[1];
-        chartSalud.node().appendChild(circlesSalud[i]);
+    for(let i = 0; i < circlesEmpleo.length; i++) {
+        circlesEmpleo[i].style.fill = colors[1];
+        chartEmpleo.node().appendChild(circlesEmpleo[i]);
     }
     ////Aprendizaje
     let circlesAprendizaje = chartAprendizaje.selectAll(`.circle-${tipo}`).nodes();
@@ -152,26 +152,26 @@ function animateChart() {
         .transition()
         .duration(3000)
         .attr("x", function(d) { return x2(+d.valor); });
-    //Entretenimiento
-    chartEntretenimiento.selectAll('.circle')
+    //Politica
+    chartPolitica.selectAll('.circle')
         .attr("cx", function(d) { return x3(0)})
         .transition()
         .duration(3000)
         .attr("cx", function(d) { return x3(+d.valor); });
 
-    chartEntretenimiento.selectAll('.label')
+    chartPolitica.selectAll('.label')
         .attr("x", function(d) { return x3(0)})
         .transition()
         .duration(3000)
         .attr("x", function(d) { return x3(+d.valor); });
-    //Salud
-    chartSalud.selectAll('.circle')
+    //Empleo
+    chartEmpleo.selectAll('.circle')
         .attr("cx", function(d) { return x4(0)})
         .transition()
         .duration(3000)
         .attr("cx", function(d) { return x4(+d.valor); });
 
-    chartSalud.selectAll('.label')
+    chartEmpleo.selectAll('.label')
         .attr("x", function(d) { return x4(0)})
         .transition()
         .duration(3000)
@@ -453,15 +453,15 @@ function setInformacion() {
     }
 }
 
-function setEntretenimiento() {
+function setPolitica() {
     let dataEnt = d3.nest()
         .key(function(d) { return d.servicio_abrev; })
         .entries(nestedData[2].values);
 
-    width3 = parseInt(chartBlockEntretenimiento.style('width')) - margin.left - margin.right,
-    height3 = parseInt(chartBlockEntretenimiento.style('height')) - margin.top - margin.bottom;
+    width3 = parseInt(chartBlockPolitica.style('width')) - margin.left - margin.right,
+    height3 = parseInt(chartBlockPolitica.style('height')) - margin.top - margin.bottom;
 
-    chartEntretenimiento = chartBlockEntretenimiento
+    chartPolitica = chartBlockPolitica
         .append("svg")
             .attr("width", width3 + margin.left + margin.right)
             .attr("height", height3 + margin.top + margin.bottom)
@@ -485,7 +485,7 @@ function setEntretenimiento() {
         g.call(function(g){g.select('.domain').remove()});
     }
 
-    chartEntretenimiento.append("g")
+    chartPolitica.append("g")
         .attr("transform", "translate(0," + height3 + ")")
         .call(xAxis3);
 
@@ -509,12 +509,12 @@ function setEntretenimiento() {
         svg.call(function(g){g.select('.domain').remove()});
     }        
 
-    chartEntretenimiento.append("g")
+    chartPolitica.append("g")
         .call(yAxis3);
 
     //Círculos para cada bloque
     for(let i = 0; i < dataEnt.length; i++) {
-        chartEntretenimiento.selectAll('init')
+        chartPolitica.selectAll('init')
             .data(dataEnt[i].values)
             .enter()
             .append('circle')
@@ -539,7 +539,7 @@ function setEntretenimiento() {
 
     //Labels para los círculos
     for(let i = 0; i < dataEnt.length; i++) {
-        chartEntretenimiento.selectAll('init')
+        chartPolitica.selectAll('init')
             .data(dataEnt[i].values)
             .enter()
             .append('text')
@@ -572,15 +572,15 @@ function setEntretenimiento() {
     }
 }
 
-function setSalud() {
-    let dataSalud = d3.nest()
+function setEmpleo() {
+    let dataEmpleo = d3.nest()
         .key(function(d) { return d.servicio_abrev; })
         .entries(nestedData[3].values);
 
-    width4 = parseInt(chartBlockSalud.style('width')) - margin.left - margin.right,
-    height4 = parseInt(chartBlockSalud.style('height')) - margin.top - margin.bottom;
+    width4 = parseInt(chartBlockEmpleo.style('width')) - margin.left - margin.right,
+    height4 = parseInt(chartBlockEmpleo.style('height')) - margin.top - margin.bottom;
 
-    chartSalud = chartBlockSalud
+    chartEmpleo = chartBlockEmpleo
         .append("svg")
             .attr("width", width4 + margin.left + margin.right)
             .attr("height", height4 + margin.top + margin.bottom)
@@ -604,13 +604,13 @@ function setSalud() {
         g.call(function(g){g.select('.domain').remove()});
     }
 
-    chartSalud.append("g")
+    chartEmpleo.append("g")
         .attr("transform", "translate(0," + height4 + ")")
         .call(xAxis4);
 
     //Estilos eje Y
     y4 = d3.scaleBand()
-        .domain(dataSalud.map(function(d) { return d.key; }))
+        .domain(dataEmpleo.map(function(d) { return d.key; }))
         .range([height4, 0]);
 
     yAxis4 = function(svg){
@@ -628,13 +628,13 @@ function setSalud() {
         svg.call(function(g){g.select('.domain').remove()});
     }        
 
-    chartSalud.append("g")
+    chartEmpleo.append("g")
         .call(yAxis4);
 
     //Círculos para cada bloque
-    for(let i = 0; i < dataSalud.length; i++) {
-        chartSalud.selectAll('init')
-            .data(dataSalud[i].values)
+    for(let i = 0; i < dataEmpleo.length; i++) {
+        chartEmpleo.selectAll('init')
+            .data(dataEmpleo[i].values)
             .enter()
             .append('circle')
             .attr('class', function(d) {
@@ -657,9 +657,9 @@ function setSalud() {
     }
 
     //Labels para los círculos
-    for(let i = 0; i < dataSalud.length; i++) {
-        chartSalud.selectAll('init')
-            .data(dataSalud[i].values)
+    for(let i = 0; i < dataEmpleo.length; i++) {
+        chartEmpleo.selectAll('init')
+            .data(dataEmpleo[i].values)
             .enter()
             .append('text')
             .attr('class', function(d) {
