@@ -38,7 +38,7 @@ function initData() {
                 servicio_padre: d.servicio_padre,
                 servicio_abrev: d.servicio_abrev,
                 tipo: d.tipo,
-                valor: +d.Total.replace(',','.')
+                valor: +d.valor.replace(',','.')
             }
         });
 
